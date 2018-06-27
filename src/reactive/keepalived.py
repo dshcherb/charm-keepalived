@@ -98,3 +98,8 @@ def loadbalancer_available(loadbalancer):
     ipaddr = re.split('/', config()['virtual_ip'])[0]
     port = config()['port']
     loadbalancer.set_address_port(ipaddr, port)
+
+
+@hook('upgrade-charm')
+def upgrade_charm():
+    clear_flag('keepalived.started')
