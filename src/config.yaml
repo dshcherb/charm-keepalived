@@ -28,3 +28,8 @@ options:
       Network interface name for the VIP. The default value is
       the result of running the following command:
       `route | grep default | head -n 1 | awk {'print $8'}`.
+  healthcheck_interval:
+    type: int
+    default: 2
+    description: |
+      vrrp_script-based health-check interval

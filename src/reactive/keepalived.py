@@ -57,6 +57,7 @@ def configure_keepalived_service():
                'network_interface': network_interface,
                'router_id': config().get('router_id'),
                'service_port': config().get('port'),
+               'healthcheck_interval': config().get('healthcheck_interval'),
               }
     render(source='keepalived.conf',
            target=KEEPALIVED_CONFIG_FILE,
