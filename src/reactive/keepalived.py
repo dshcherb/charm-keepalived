@@ -4,9 +4,9 @@ from subprocess import check_output
 
 from charms.reactive import set_state, when, when_not
 from charms.reactive.flags import remove_state
-from charms.templating.jinja2 import render
 
 
+from charmhelpers.core.templating import render
 from charmhelpers.fetch import apt_update, apt_install
 from charmhelpers.core.hookenv import log, status_set
 from charmhelpers.core.hookenv import config, is_leader
@@ -55,7 +55,8 @@ def configure_keepalived_service():
     context = {'is_leader': is_leader(),
                'virtual_ip': virtual_ip,
                'network_interface': network_interface,
-               'router_id': config().get('router_id')
+               'router_id': config().get('router_id'),
+               'service_port': config().get('port'),
               }
     render(source='keepalived.conf',
            target=KEEPALIVED_CONFIG_FILE,
@@ -80,13 +81,19 @@ def reconfigure():
 
 @when('website.available', 'keepalived.started')
 def website_available(website):
-    ''' Send the port '''
     ipaddr = re.split('/', config()['virtual_ip'])[0]
-    website.configure(port=443, private_address=ipaddr, hostname=ipaddr)
+    vip_hostname = config()['vip_hostname']
+    hostname = vip_hostname if vip_hostname else ipaddr
+    # a port to export over a relation
+    # TODO: this could be more tightly coupled with the actual
+    # service via a relation
+    port = config()['port']
+    website.configure(port=port, private_address=ipaddr, hostname=hostname)
 
 
 @when('loadbalancer.available', 'keepalived.started')
 def loadbalancer_available(loadbalancer):
     ''' Send the virtual IP  '''
     ipaddr = re.split('/', config()['virtual_ip'])[0]
-    loadbalancer.set_address_port(ipaddr, 443)
+    port = config()['port']
+    loadbalancer.set_address_port(ipaddr, port)

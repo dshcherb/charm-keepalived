@@ -5,6 +5,16 @@ options:
     description: |
       Virtual IP/netmask that will be moved between instances,
       e.g.: 10.1.2.3/16
+  vip_hostname:
+    type: string
+    default: ""
+    description: |
+      A VIP hostname to pass to clients.
+  port:
+    type: int
+    default: 443
+    description: |
+      A port to pass to clients.
   router_id:
     type: int
     default: 23
