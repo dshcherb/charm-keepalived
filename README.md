@@ -48,6 +48,17 @@ juju add-relation haproxy keepalived
 
 ```
 
+## Build Instructions
+
+With tox pre-installed, run the following in the top-level directory of this
+source repository:
+
+```
+tox -e build
+```
+
+The charm will be present under `build/builds/keepalived`.
+
 ## Further information
 
 - [Keepalived Homepage](http://www.keepalived.org/)
