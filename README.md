@@ -1,35 +1,48 @@
 # Keepalived Charm
 
-Keepalived is a routing software written in C. The main goal of this project is
-to provide simple and robust facilities for loadbalancing and high-availability
-to Linux system and Linux based infrastructures. Loadbalancing framework relies
-on well-known and widely used Linux Virtual Server (IPVS) kernel module
-providing Layer4 loadbalancing. Keepalived implements a set of checkers to
-dynamically and adaptively maintain and manage loadbalanced server pool
-according their health. On the other hand high-availability is achieved by VRRP
-protocol. VRRP is a fundamental brick for router failover. In addition,
-Keepalived implements a set of hooks to the VRRP finite state machine providing
-low-level and high-speed protocol interactions. Keepalived frameworks can be
-used independently or all together to provide resilient infrastructures.
-
+[Keepalived](http://www.keepalived.org/) is software which provides high
+availability by assigning two or more nodes a virtual IP and monitoring
+those nodes, failing over when one goes down.
 
 ## Usage
 
 The Keepalived charm is a
 [subordinate](https://jujucharms.com/docs/stable/authors-subordinate-services).
 
-For HA Proxy
+### Using with Kubernetes
+([CDK](https://jujucharms.com/canonical-kubernetes))
+
+Use keepalived with CDK to ensure kubeapi-load-balancer is not a single
+point of failure.
+
+```
+juju deploy keepalived
+
+juju relate keepalived:juju-info kubeapi-load-balancer:juju-info
+juju relate keepalived:lb-sink kubeapi-load-balancer:website
+juju relate keepalived:loadbalancer kubernetes-master:loadbalancer
+juju relate keepalived:website kubernetes-worker:kube-api-endpoint
+
+# configure keepalived (values are examples, substitute your own)
+export VIP_HOSTNAME=test.example.com
+juju config keepalived virtual_ip=10.10.74.250
+juju config keepalived port=443
+juju config keepalived vip_hostname=$VIP_HOSTNAME
+
+# set extra_sans to update api server ssl cert
+juju config kubeapi-load-balancer extra_sans=$VIP_HOSTNAME
+juju config kubernetes-master extra_sans=$VIP_HOSTNAME
+
+# if you only have one kubeapi-load-balancer unit, add another one
+juju add-unit kubeapi-load-balancer
+
+```
+
+### Using with HA Proxy
 ```
 juju deploy keepalived
 juju add-relation haproxy keepalived
-```
 
-For Kubernetes
-```
-juju deploy keepalived
-juju add-relation keepalived:juju-info kubeapi-load-balancer:juju-info
-juju add-relation keepalived kubernetes-worker
-juju add-relation keepalived kubernetes-master
 ```
 
 ## Further information
