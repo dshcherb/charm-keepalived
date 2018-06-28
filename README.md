@@ -22,6 +22,10 @@ juju relate keepalived:lb-sink kubeapi-load-balancer:website
 juju relate keepalived:loadbalancer kubernetes-master:loadbalancer
 juju relate keepalived:website kubernetes-worker:kube-api-endpoint
 
+# this relation is also needed as usual so that the actual
+# load-balancer knows about backend endpoints
+juju relate kubernetes-master:kube-api-endpoint kubeapi-load-balancer:apiserver
+
 # configure keepalived (values are examples, substitute your own)
 export VIP_HOSTNAME=test.example.com
 juju config keepalived virtual_ip=10.10.74.250
