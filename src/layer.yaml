@@ -1,4 +1,5 @@
 includes: ['layer:basic', 'interface:juju-info', 'interface:public-address', 'interface:http']
+repo: https://github.com/juju-solutions/charm-keepalived.git
 options:
   basic:
     use_venv: true

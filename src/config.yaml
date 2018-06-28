@@ -32,4 +32,4 @@ options:
     type: int
     default: 2
     description: |
-      vrrp_script-based health-check interval
+      vrrp_script-based health-check interval, in seconds
