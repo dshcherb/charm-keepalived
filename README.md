@@ -9,8 +9,7 @@ those nodes, failing over when one goes down.
 The Keepalived charm is a
 [subordinate](https://jujucharms.com/docs/stable/authors-subordinate-services).
 
-### Using with Kubernetes
-([CDK](https://jujucharms.com/canonical-kubernetes))
+### Using with Kubernetes ([CDK](https://jujucharms.com/canonical-kubernetes))
 
 Use keepalived with CDK to ensure kubeapi-load-balancer is not a single
 point of failure.
